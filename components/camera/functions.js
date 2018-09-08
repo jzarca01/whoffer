@@ -20,18 +20,27 @@ export async function checkForLabels(base64) {
         }]
       }
     })
-    console.log(labels)
     return labels.data
-  }
-  catch(err) {
-      console.error(err)
+  } catch (err) {
+    console.error(err)
   }
 }
 
 export function filterLabelsList(response) {
   let resultArr = []
   response.textAnnotations.forEach((label) => {
-      resultArr.push(label)
+    resultArr.push(label)
   })
   return resultArr
+}
+
+export function extractDateFromText(text) {
+  const dateRegex = /(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/[0-9]{4}/g
+
+  let matches = [];
+  let match;
+  while ((match = dateRegex.exec(text)) !== null) {
+    matches.push(match[0]);
+  }
+  return matches[0]
 }
