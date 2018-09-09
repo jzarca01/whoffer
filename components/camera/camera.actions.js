@@ -24,11 +24,13 @@ export function capturePhoto(data) {
     try {
       await isLoading(true)
       const text = await checkForLabels(data)
+      const responses = await filterLabelsList(text.responses[0])
+      const dateExtracted = extractDateFromText(responses[0].description)
       dispatch({
         type: CAPTURE_PHOTO,
         payload: {
           photoInfo: data,
-          text: extractDateFromText(filterLabelsList(text.responses[0])),
+          text: dateExtracted
         }
       });
       await isLoading(false)

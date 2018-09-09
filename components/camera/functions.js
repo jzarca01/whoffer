@@ -1,6 +1,9 @@
 import axios from 'axios'
 import config from '../../config/config.json'
 
+const DATE_REGEX = /(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/[0-9]{4}/g
+const TIME_REGEX = /([0-2]{0,1}[0-9]{1}:[0-5][0-9]*)/g
+
 export async function checkForLabels(base64) {
   try {
     const labels = await axios({
@@ -35,11 +38,18 @@ export function filterLabelsList(response) {
 }
 
 export function extractDateFromText(text) {
-  const dateRegex = /(0[1-9]|[1-2][0-9]|3[0-1])\/(0[1-9]|1[0-2])\/[0-9]{4}/g
+  return extractFromText(text, DATE_REGEX)
+}
+
+export function extractTimeFromText(text) {
+  return extractFromText(text, TIME_REGEX)
+}
+
+function extractFromText(text, regex) {
 
   let matches = [];
   let match;
-  while ((match = dateRegex.exec(text)) !== null) {
+  while ((match = regex.exec(text)) !== null) {
     matches.push(match[0]);
   }
   return matches[0]
