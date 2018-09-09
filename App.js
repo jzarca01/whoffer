@@ -1,16 +1,14 @@
-import React, {
+import {
   Component
 } from 'react';
 import {
   StyleSheet,
   Image,
-  Text,
   View,
   TouchableOpacity,
   Alert,
 } from 'react-native';
 import axios from 'axios';
-import ImageResizer from 'react-native-image-resizer';
 import Spinner from 'react-native-spinkit';
 import Camera from 'react-native-camera';
 import config from './config/config.json'
@@ -19,18 +17,7 @@ import config from './config/config.json'
 export default class App extends Component {
   state = {
     loading: false,
-    flash: 'off',
-    zoom: 0,
     autoFocus: 'on',
-    depth: 0,
-    type: 'back',
-    whiteBalance: 'auto',
-    ratio: '16:9',
-    ratios: [],
-    photoId: 1,
-    showGallery: false,
-    photos: [],
-    faces: [],
   };
 
   async takePicture() {
@@ -107,15 +94,8 @@ export default class App extends Component {
         style={{
           flex: 1,
         }}
-        type={this.state.type}
         captureTarget={Camera.constants.CaptureTarget.memory}
-        flashMode={this.state.flash}
         autoFocus={this.state.autoFocus}
-        zoom={this.state.zoom}
-        whiteBalance={this.state.whiteBalance}
-        ratio={this.state.ratio}
-        onTextRecognized={this.onTextDetected}
-        focusDepth={this.state.depth}
         permissionDialogTitle={'Permission to use camera'}
         permissionDialogMessage={'We need your permission to use your camera phone'}
       >
