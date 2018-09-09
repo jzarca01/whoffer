@@ -8,7 +8,8 @@ import {
 import {
   checkForLabels,
   filterLabelsList,
-  extractDateFromText
+  extractDateFromText,
+  extractTimeFromText
 } from './functions'
 
 export function loadCamera() {
@@ -22,21 +23,46 @@ export function loadCamera() {
 export function capturePhoto(data) {
   return async function (dispatch) {
     try {
-      await isLoading(true)
+        dispatch({
+            type: LOADING,
+            payload: {
+              loading: true
+            }
+          })
       const text = await checkForLabels(data)
+      if(!text.responses) {
+          throw new Error('Nothing')
+      }
       const responses = await filterLabelsList(text.responses[0])
       const dateExtracted = extractDateFromText(responses[0].description)
+      const timeExtracted = extractTimeFromText(responses[0].description)
       dispatch({
         type: CAPTURE_PHOTO,
         payload: {
           photoInfo: data,
-          text: dateExtracted
+          text: `${dateExtracted} à ${timeExtracted}`
         }
       });
-      await isLoading(false)
+      dispatch({
+        type: LOADING,
+        payload: {
+          loading: false
+        }
+      })
     } catch (err) {
-      await isErrorCamera(err)
-      await isLoading(false)
+        dispatch({
+            type: CAMERA_ERROR,
+            payload: {
+              error: true,
+              errroDetails: err
+            }
+          });
+      dispatch({
+        type: LOADING,
+        payload: {
+          loading: false
+        }
+      })
     }
   }
 }

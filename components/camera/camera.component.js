@@ -6,6 +6,7 @@ import React, {
     StyleSheet,
     Image,
     View,
+    Text,
     TouchableOpacity,
     Alert,
   } from 'react-native'
@@ -42,8 +43,8 @@ import React, {
       }
 
     displayResult(filteredResult) {
-      if (filteredResult.length) {
-        Alert.alert(filteredResult[0].description)
+      if (filteredResult) {
+        Alert.alert(filteredResult)
       }
     }
 
@@ -82,9 +83,18 @@ import React, {
         </Camera>)
     }
 
+    renderError() {
+      return (
+        <View>
+            <Text>${this.props.errorDetails}</Text>
+          </View>
+      )
+    }
+
     render() {
       return <View style={styles.container}>
         {this.renderCamera()}
+        {this.props.error ? this.renderError() : null}
         </View>
       }
     }
