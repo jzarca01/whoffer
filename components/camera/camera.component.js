@@ -13,6 +13,9 @@ import React, {
   import Spinner from 'react-native-spinkit'
   import Camera from 'react-native-camera'
 
+  import axios from 'axios'
+  import config from '../../config/config.json'
+
   export default class CameraComponent extends Component {
 
     constructor(props) {
@@ -36,7 +39,25 @@ import React, {
 
     displayResult(filteredResult) {
       if (filteredResult) {
-        Alert.alert(JSON.stringify(filteredResult))
+        axios({
+          method: 'POST',
+          url: config.backendUrl,
+          headers: {
+            "Content-Type":"application/json"
+          },
+          data: {
+            email: 'zz@zz.com',
+            storeNumber: filteredResult.store,
+            date: filteredResult.date,
+            time: filteredResult.time
+          }
+        })
+        .then(response =>
+          Alert.alert(response.data)
+        )
+        .catch(err =>
+          Alert.alert(JSON.stringify(err))
+        )
       }
     }
 
