@@ -9,7 +9,8 @@ import {
     photoInfo: {},
     error: false,
     errorDetails: {},
-    text: [],
+    ticketInfos: {},
+    text: null,
     loading: false
   };
 
@@ -27,8 +28,7 @@ import {
         return {
           ...state,
           loading: false,
-          photoInfo: action.payload.photoInfo,
-          text: action.payload.text
+          ...action.payload
         };
       }
       case CAMERA_ERROR: {
@@ -36,6 +36,9 @@ import {
           ...state,
           error: true,
           loading: false,
+          photoInfo: {},
+          text: null,
+          ticketInfos: {},
           errorDetails: action.payload.errorDetails
         };
       }

@@ -9,7 +9,8 @@ import {
   checkForLabels,
   filterLabelsList,
   extractDateFromText,
-  extractTimeFromText
+  extractTimeFromText,
+  extractStoreFromText
 } from './functions'
 
 export function loadCamera() {
@@ -34,16 +35,24 @@ export function capturePhoto(data) {
           throw new Error('Nothing')
       }
       const responses = await filterLabelsList(text.responses[0])
-      const dateExtracted = extractDateFromText(responses[0].description)
-      const timeExtracted = extractTimeFromText(responses[0].description)
-      dispatch({
+      const dateExtracted = await extractDateFromText(responses[0].description)
+      const timeExtracted = await extractTimeFromText(responses[0].description)
+      const subwayExtracted = await extractStoreFromText(responses[0].description)
+      const ticketInfos = {
+        date: dateExtracted,
+        time: timeExtracted,
+        store: subwayExtracted
+      }
+      console.log('ticketInfos', ticketInfos)
+      await dispatch({
         type: CAPTURE_PHOTO,
         payload: {
           photoInfo: data,
-          text: `${dateExtracted} à ${timeExtracted}`
+          ticketInfos: ticketInfos,
+          text: responses[0].description
         }
       });
-      dispatch({
+      return await dispatch({
         type: LOADING,
         payload: {
           loading: false

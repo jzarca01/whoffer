@@ -17,25 +17,17 @@ import React, {
 
     constructor(props) {
       super(props)
-      this.state = {
-        flash: 'off',
-        zoom: 0,
-        autoFocus: 'on',
-        depth: 0,
-        type: 'back',
-      }
     }
 
     componentDidMount() {
       this.props.loadCamera()
-      console.log(this.props)
     }
 
     async takePicture() {
           try {
             const data = await this.camera.capture()
             await this.props.capturePhoto(data.data)
-            await this.displayResult(this.props.text)
+            await this.displayResult(this.props.ticketInfos)
           }
           catch(err) {
             console.error(err)
@@ -44,7 +36,7 @@ import React, {
 
     displayResult(filteredResult) {
       if (filteredResult) {
-        Alert.alert(filteredResult)
+        Alert.alert(JSON.stringify(filteredResult))
       }
     }
 
@@ -56,10 +48,7 @@ import React, {
           style={{
             flex: 1,
           }}
-          type={this.state.type}
           captureTarget={Camera.constants.CaptureTarget.memory}
-          flashMode={this.state.flash}
-          autoFocus={this.state.autoFocus}
           permissionDialogTitle={'Permission to use camera'}
           permissionDialogMessage={'We need your permission to use your camera phone'}
         >
