@@ -92,13 +92,7 @@ async function fetchCookie(email, storeNumber = '55141-0', date, time) {
   }
 }
 
-async function init() {
-  cookie = await fetchCookie('zz@zz.com', '55141-0', '12/09/2018', '20:31')
-  console.log(cookie)
-}
-
 app.post('/cookie', async function (req, res) {
-    console.log(req.body)
   const response = await fetchCookie(req.body.email, req.body.storeNumber, req.body.date, req.body.time)
   res.send(response)
 })
