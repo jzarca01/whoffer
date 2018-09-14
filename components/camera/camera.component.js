@@ -6,35 +6,31 @@ import React, {
     StyleSheet,
     Image,
     View,
+    Text,
     TouchableOpacity,
     Alert,
   } from 'react-native'
   import Spinner from 'react-native-spinkit'
   import Camera from 'react-native-camera'
 
+  import axios from 'axios'
+  import config from '../../config/config.json'
+
   export default class CameraComponent extends Component {
 
     constructor(props) {
       super(props)
-      this.state = {
-        flash: 'off',
-        zoom: 0,
-        autoFocus: 'on',
-        depth: 0,
-        type: 'back',
-      }
     }
 
     componentDidMount() {
       this.props.loadCamera()
-      console.log(this.props)
     }
 
     async takePicture() {
           try {
             const data = await this.camera.capture()
             await this.props.capturePhoto(data.data)
-            await this.displayResult(this.props.text)
+            await this.displayResult(this.props.ticketInfos)
           }
           catch(err) {
             console.error(err)
@@ -42,8 +38,26 @@ import React, {
       }
 
     displayResult(filteredResult) {
-      if (filteredResult.length) {
-        Alert.alert(filteredResult[0].description)
+      if (filteredResult) {
+        axios({
+          method: 'POST',
+          url: config.backendUrl,
+          headers: {
+            "Content-Type":"application/json"
+          },
+          data: {
+            email: 'zz@zz.com',
+            storeNumber: filteredResult.store,
+            date: filteredResult.date,
+            time: filteredResult.time
+          }
+        })
+        .then(response =>
+          Alert.alert(response.data)
+        )
+        .catch(err =>
+          Alert.alert(JSON.stringify(err))
+        )
       }
     }
 
@@ -55,10 +69,7 @@ import React, {
           style={{
             flex: 1,
           }}
-          type={this.state.type}
           captureTarget={Camera.constants.CaptureTarget.memory}
-          flashMode={this.state.flash}
-          autoFocus={this.state.autoFocus}
           permissionDialogTitle={'Permission to use camera'}
           permissionDialogMessage={'We need your permission to use your camera phone'}
         >
@@ -82,9 +93,18 @@ import React, {
         </Camera>)
     }
 
+    renderError() {
+      return (
+        <View>
+            <Text>${this.props.errorDetails}</Text>
+          </View>
+      )
+    }
+
     render() {
       return <View style={styles.container}>
         {this.renderCamera()}
+        {this.props.error ? this.renderError() : null}
         </View>
       }
     }
