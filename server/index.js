@@ -16,7 +16,7 @@ async function fetchCookie(email, storeNumber = '55141-0', date, time) {
 
   try {
     const browser = await puppeteer.launch({
-      headless: false,
+      headless: true,
       slowMo: 20
     })
     const page = await browser.newPage()
@@ -102,4 +102,4 @@ app.post('/cookie', async function (req, res) {
   const response = await fetchCookie(req.body.email, req.body.storeNumber, req.body.date, req.body.time)
   res.send(response)
 })
-app.listen(3000)
+app.listen(4000)

@@ -3,5 +3,5 @@
         "api": "https://vision.googleapis.com/v1/images:annotate",
         "apiKey": "AIzaSyBLwBYTep8mm0D9F0bI3NYtd-belreAFGc"
     },
-    "backendUrl": "https://39fff2fb.ngrok.io/cookie"
+    "backendUrl": "https://731dee16.ngrok.io/cookie"
 }
